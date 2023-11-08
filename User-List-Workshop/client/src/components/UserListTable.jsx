@@ -23,13 +23,14 @@ const UserListTable = () => {
 
   const userCreateHandler = async (e) => {
     e.preventDefault();
-    
-    setShowCreate(false);
 
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
+    const newUser = await userService.create(data);
 
-    const result = await userService.create(data);
+    setUsers(state => [...state, newUser]);
+
+    setShowCreate(false);
 
   }
 
