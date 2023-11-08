@@ -8,7 +8,9 @@ const UserListTable = () => {
   const [showCreate, setShowCreate] = useState(false);
 
   useEffect(() => {
-    userService.getAll().then((result) => setUsers(result));
+    userService.getAll()
+    .then((result) => setUsers(result))
+    .catch(err=> console.log(err))
   }, []);
 
   const createUserClickHandler = () => {
@@ -19,9 +21,26 @@ const UserListTable = () => {
     setShowCreate(false);
   }
 
+  const userCreateHandler = async (e) => {
+    e.preventDefault();
+    
+    setShowCreate(false);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+
+    const result = await userService.create(data);
+
+  }
+
   return (
     <div className="table-wrapper">
-        {showCreate && <CreateUserModal hideModal={hideCreateUserModal}/>}
+        {showCreate && (
+        <CreateUserModal 
+        hideModal={hideCreateUserModal}
+        onUserCreate={userCreateHandler}
+        />
+        )}
 
       {/*<!-- Overlap components  -->*/}
       {/*<!-- <div className="loading-shade"> -->*/}
