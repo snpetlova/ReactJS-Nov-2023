@@ -2,46 +2,60 @@ import UserListItem from "./UserListItem";
 import { useEffect, useState } from "react";
 import * as userService from "../services/userService";
 import CreateUserModal from "./CreateUserModal";
+import UserInfoModal from "./UserInfoModal";
 
 const UserListTable = () => {
   const [users, setUsers] = useState([]);
   const [showCreate, setShowCreate] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    userService.getAll()
-    .then((result) => setUsers(result))
-    .catch(err=> console.log(err))
+    userService
+      .getAll()
+      .then((result) => setUsers(result))
+      .catch((err) => console.log(err));
   }, []);
 
   const createUserClickHandler = () => {
     setShowCreate(true);
-  }
+  };
 
   const hideCreateUserModal = () => {
     setShowCreate(false);
-  }
+  };
 
   const userCreateHandler = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
+    const data = Object.fromEntries(new FormData(e.currentTarget));
     const newUser = await userService.create(data);
 
-    setUsers(state => [...state, newUser]);
+    setUsers((state) => [...state, newUser]);
 
     setShowCreate(false);
+  };
 
-  }
+  const userInfoClickHandler = async (userId) => {
+    setSelectedUser(userId);
+    setShowInfo(true);
+  };
 
   return (
     <div className="table-wrapper">
-        {showCreate && (
-        <CreateUserModal 
-        hideModal={hideCreateUserModal}
-        onUserCreate={userCreateHandler}
+      {showCreate && (
+        <CreateUserModal
+          hideModal={hideCreateUserModal}
+          onUserCreate={userCreateHandler}
         />
-        )}
+      )}
+
+      {showInfo && (
+        <UserInfoModal
+          hideModal={() => setShowInfo(false)}
+          userId={selectedUser}
+        />
+      )}
 
       {/*<!-- Overlap components  -->*/}
       {/*<!-- <div className="loading-shade"> -->*/}
@@ -211,22 +225,24 @@ const UserListTable = () => {
         <tbody>
           {/* <!-- Table row component --> */}
           {users.map((user) => (
-            <UserListItem 
-            key={user._id}
-            createdAt={user.createdAt}
-            email={user.email}
-            firstName={user.firstName}
-            lastName={user.lastName}
-            imageUrl={user.imageUrl}
-            phoneNumber={user.phoneNumber}
+            <UserListItem
+              key={user._id}
+              userId={user._id}
+              createdAt={user.createdAt}
+              email={user.email}
+              firstName={user.firstName}
+              imageUrl={user.imageUrl}
+              lastName={user.lastName}
+              phoneNumber={user.phoneNumber}
+              onInfoClick={userInfoClickHandler}
             />
           ))}
         </tbody>
       </table>
 
-      <button className="btn-add btn" onClick={createUserClickHandler}>Add new user</button>
-
-      
+      <button className="btn-add btn" onClick={createUserClickHandler}>
+        Add new user
+      </button>
     </div>
   );
 };
