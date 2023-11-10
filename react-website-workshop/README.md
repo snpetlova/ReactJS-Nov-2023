@@ -1,3 +1,5 @@
+The site is created following PedroTech tutorial: https://www.youtube.com/watch?v=QwarZBtFoFA&t=4343s 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
