@@ -1,11 +1,20 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router-dom";
+import BannerImage from "../assets/pizza.jpeg";
+import "../styles/Home.css";
 
 function Home() {
   return (
-    <div>
-      heyo
+    <div className="home" style={{ backgroundImage: `url(${BannerImage})` }}>
+      <div className="headerContainer">
+        <h1> Snezhi's Pizzeria </h1>
+        <p> BEST PIZZA IN TOWN </p>
+        <Link to="/menu">
+          <button> ORDER NOW </button>
+        </Link>
+      </div>
     </div>
-  )
+  );
 }
 
 export default Home;
